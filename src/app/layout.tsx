@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Manrope, Poppins } from "next/font/google";
 import "@/styles/globals.css";
 
 import { cn } from "@/lib/utils";
+import UserProvider from "@/lib/providers/user";
+import AuthProvider from "@/lib/providers/auth";
+import QueryProvider from "@/lib/providers/query";
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600", "700", "800"],
+const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
@@ -26,10 +28,14 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          poppins.variable
+          manrope.variable
         )}
       >
-        {children}
+        <UserProvider>
+          <QueryProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </QueryProvider>
+        </UserProvider>
       </body>
     </html>
   );

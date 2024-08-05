@@ -8,9 +8,9 @@ export default function LogoutButton() {
   return (
     <Button
       onClick={() => signOut()}
-      className="shrink-0 bg-white hover:bg-white/40 text-accent w-8 h-8 rounded-xl grid place-items-center border"
+      className="shrink-0 bg-white hover:bg-white/40 text-foreground hover:text-accent w-8 h-8 rounded-lg grid place-items-center"
     >
-      <FontAwesomeIcon className="w-4 h-4" icon={Icons.rightFromBracket} />
+      <FontAwesomeIcon className="w-5 h-5" icon={Icons.rightFromBracket} />
     </Button>
   );
 }

@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 export default withAuth(
   async function middleware(req) {
     const pathname = req.nextUrl.pathname;
+    const headers = new Headers(req.headers);
+    headers.set("x-current-path", pathname);
 
     // Manage route protection
     const isAuth = await getToken({ req });
@@ -19,7 +21,7 @@ export default withAuth(
       if (isAuth) {
         return NextResponse.redirect(new URL("/chat", req.url));
       }
-      return NextResponse.next();
+      return NextResponse.next({ headers });
     }
 
     if (!isAuth && isAccessingSensitiveRoute) {
@@ -40,5 +42,8 @@ export default withAuth(
 );
 
 export const config = {
-  matchter: ["/", "/login", "/chat/:path*"],
+  matchter: [
+    // match all routes except static files and APIs
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

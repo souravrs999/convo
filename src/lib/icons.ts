@@ -8,6 +8,16 @@ import {
   faUserGroup,
   faCheck,
   faXmark,
+  faPaperclip,
+  faPaperPlane,
+  faSuitcase,
+  faGear,
+  faBookmark,
+  faCalendar,
+  faFolder,
+  faMagnifyingGlass,
+  faMicrophone,
+  faInfo,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Icons = {
@@ -20,4 +30,14 @@ export const Icons = {
   userGroup: faUserGroup,
   check: faCheck,
   xMark: faXmark,
+  paperclip: faPaperclip,
+  paperPlane: faPaperPlane,
+  suitcase: faSuitcase,
+  gear: faGear,
+  bookmark: faBookmark,
+  calendar: faCalendar,
+  folder: faFolder,
+  magnifyingGlass: faMagnifyingGlass,
+  microphone: faMicrophone,
+  info: faInfo,
 };

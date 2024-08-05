@@ -1,47 +1,47 @@
+"use client";
 import { FC, forwardRef, HTMLAttributes, Ref } from "react";
-import SidebarGroup from "./sidebar-group";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Icons } from "@/lib/icons";
-import { chatHrefConstructor, cn } from "@/lib/utils";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import { notFound } from "next/navigation";
-import { getFriendsByUserId } from "@/helpers/get-friends-by-user-id";
-import SidebarGroupItem from "./sidebar-group-item";
+import { User } from "next-auth";
 import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+
+import { useBoundStore } from "@/lib/store";
+import { chatHrefConstructor, cn } from "@/lib/utils";
+import SidebarGroupItem from "./sidebar-group-item";
 
 type AllChatProps = HTMLAttributes<HTMLDivElement> & {};
 const AllChats: FC<AllChatProps> = forwardRef(
-  async (props: AllChatProps, ref: Ref<HTMLDivElement>) => {
-    const session = await getServerSession(authOptions);
-    if (!session) notFound();
+  (props: AllChatProps, ref: Ref<HTMLDivElement>) => {
+    const user = useBoundStore((state) => state.user);
 
-    const friends = await getFriendsByUserId(session.user.id);
+    const { data: friends } = useQuery<User[]>({
+      queryKey: ["FRIENDS_LIST"],
+      queryFn: async () => {
+        const res = await axios.post("/api/friends/my-friends", {
+          userId: user?.id,
+        });
+        return res.data;
+      },
+      enabled: !!user?.id,
+    });
 
     const { className, ...rest } = props;
     return (
-      <SidebarGroup
-        title="all chats"
-        icon={
-          <FontAwesomeIcon icon={Icons.commentDots} className="w-4 h-4 mr-2" />
-        }
+      <div
+        ref={ref}
+        className={cn("flex flex-col items-center", className)}
+        {...rest}
       >
-        <div
-          ref={ref}
-          className={cn("flex flex-col items-center -mx-2", className)}
-          {...rest}
-        >
-          {friends.map((friend) => (
-            <Link
-              key={friend.id}
-              className="w-full"
-              href={`/chat/${chatHrefConstructor(session.user.id, friend.id)}`}
-            >
-              <SidebarGroupItem user={friend} />
-            </Link>
-          ))}
-        </div>
-      </SidebarGroup>
+        {friends?.map((friend) => (
+          <Link
+            key={friend.id}
+            className="w-full"
+            href={`/chat/${chatHrefConstructor(user?.id!, friend.id)}`}
+          >
+            <SidebarGroupItem user={friend} />
+          </Link>
+        ))}
+      </div>
     );
   }
 );

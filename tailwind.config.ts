@@ -62,6 +62,7 @@ const config = {
         "light-red": "hsl(var(--chat-light-red))",
       },
       borderRadius: {
+        DEFAULT: "var(--radius)",
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
@@ -82,7 +83,10 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar")({ nocompatible: true }),
+  ],
 } satisfies Config;
 
 export default config;

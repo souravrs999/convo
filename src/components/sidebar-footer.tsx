@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
 import LogoutButton from "./logout-button";
-import AddUser from "./add-friend";
+import { authOptions } from "@/lib/auth";
 
 export default async function SidebarFooter() {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   return (
     <div className="flex items-center gap-8 justify-between bg-white border-t -mx-5 pt-4 px-4">
       <div className="flex gap-2 items-center">

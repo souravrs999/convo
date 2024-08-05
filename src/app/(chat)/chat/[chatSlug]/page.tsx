@@ -7,6 +7,10 @@ import { authOptions } from "@/lib/auth";
 
 import ChatHeader from "@/components/chat-header";
 import { getChatMessages } from "@/helpers/get-chat-messages";
+import ChatArea from "@/components/chat-area";
+import ChatInput from "@/components/chat-input";
+import DetailsBar from "@/components/details-bar";
+import MessageQueueHandler from "@/components/message-queue-handler";
 
 type ChatRoomProps = {
   params: { chatSlug: string };
@@ -26,15 +30,25 @@ const ChatRoom: FC<ChatRoomProps> = async ({ params }) => {
     "get",
     `user:${chatPartnerId}`
   )) as string;
+
+  const currentUser = session.user as User;
   const chatPartner = JSON.parse(chatPartnerRaw) as User;
   const initialMessages = await getChatMessages(chatSlug);
 
   return (
-    <div className="relative flex-1">
-      <ChatHeader members={[chatPartner]} />
-      <div className="relative h-full flex flex-col gap-6 max-h-screen overflow-y-auto">
-        hi
+    <div className="flex-1 flex">
+      <div className="flex flex-col w-full">
+        <ChatHeader members={[chatPartner]} />
+        <ChatArea
+          initialMessages={initialMessages}
+          currentUser={currentUser}
+          chatId={chatSlug}
+          chatPartner={chatPartner}
+        />
+        <ChatInput chatPartner={chatPartner} chatId={chatSlug} />
       </div>
+      <DetailsBar chatPartner={chatPartner} />
+      <MessageQueueHandler />
     </div>
   );
 };
