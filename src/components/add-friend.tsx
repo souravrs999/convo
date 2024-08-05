@@ -54,12 +54,11 @@ export default function AddUser() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="relative shrink-0 bg-white hover:bg-white/40 text-accent w-8 h-8 rounded-xl grid place-items-center border">
-          <FontAwesomeIcon className="w-4 h-4" icon={Icons.message} />
-          <FontAwesomeIcon
-            className="absolute -top-[8px] -right-[8px] w-4 h-4"
-            icon={Icons.squarePlus}
-          />
+        <Button
+          size="icon"
+          className="w-full p-0 bg-white text-foreground hover:text-accent hover:bg-white"
+        >
+          <FontAwesomeIcon className="w-5 h-5" icon={Icons.userPlus} />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm">
@@ -77,7 +76,7 @@ export default function AddUser() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-accent">Email</FormLabel>
+                  <FormLabel className="text-primary">Email</FormLabel>
                   <FormControl>
                     <Input placeholder="John@doe.com" {...field} />
                   </FormControl>
@@ -91,14 +90,18 @@ export default function AddUser() {
               )}
             />
             <div className="flex gap-2 mt-4">
-              <Button type="submit" className="w-full">
-                Request
-              </Button>
               <DialogClose asChild>
-                <Button variant="outline" type="submit" className="w-full">
+                <Button
+                  variant="outline"
+                  type="submit"
+                  className="w-full hover:bg-muted-foreground hover:text-primary border-muted-foreground"
+                >
                   Cancel
                 </Button>
               </DialogClose>
+              <Button type="submit" className="w-full">
+                Request
+              </Button>
             </div>
           </form>
         </Form>

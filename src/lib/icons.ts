@@ -18,6 +18,7 @@ import {
   faMagnifyingGlass,
   faMicrophone,
   faInfo,
+  faUserPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const Icons = {
@@ -40,4 +41,5 @@ export const Icons = {
   magnifyingGlass: faMagnifyingGlass,
   microphone: faMicrophone,
   info: faInfo,
+  userPlus: faUserPlus,
 };

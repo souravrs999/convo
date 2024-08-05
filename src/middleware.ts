@@ -1,12 +1,10 @@
 import { getToken } from "next-auth/jwt";
 import { withAuth } from "next-auth/middleware";
-import { NextResponse } from "next/server";
+import { NextResponse, userAgent } from "next/server";
 
 export default withAuth(
   async function middleware(req) {
     const pathname = req.nextUrl.pathname;
-    const headers = new Headers(req.headers);
-    headers.set("x-current-path", pathname);
 
     // Manage route protection
     const isAuth = await getToken({ req });
@@ -21,7 +19,7 @@ export default withAuth(
       if (isAuth) {
         return NextResponse.redirect(new URL("/chat", req.url));
       }
-      return NextResponse.next({ headers });
+      return NextResponse.next();
     }
 
     if (!isAuth && isAccessingSensitiveRoute) {

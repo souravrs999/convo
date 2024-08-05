@@ -7,7 +7,7 @@ import AllChats from "./all-chats";
 type SidebarProps = HTMLAttributes<HTMLDivElement> & {};
 const Sidebar: FC<SidebarProps> = () => {
   return (
-    <div className="flex w-72 border-r flex-col h-screen bg-background">
+    <div className="flex shrink-0 w-72 border-r flex-col h-screen bg-background">
       <div className="px-4 py-5 border-b">
         <div className="relative">
           <Input

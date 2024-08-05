@@ -1,6 +1,5 @@
 "use client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "next/image";
 import { FC, forwardRef, HTMLAttributes, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/utils";
@@ -9,6 +8,8 @@ import { Icons } from "@/lib/icons";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import LogoutButton from "./logout-button";
+import AddUser from "./add-friend";
+import Preferences from "./preferences";
 
 type MiniBarSeparatorProps = HTMLAttributes<HTMLSpanElement> & {};
 const MiniBarSeparator: FC<MiniBarSeparatorProps> = forwardRef(
@@ -73,48 +74,11 @@ const MiniBar: FC<MiniBarProps> = forwardRef(
             <AvatarFallback>{user?.name || "UR"}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col gap-8 my-6">
-            <MiniBarItem
-              title="All chats"
-              icon={
-                <FontAwesomeIcon icon={Icons.message} className="w-5 h-5" />
-              }
-            />
-            <MiniBarItem
-              title="Work"
-              icon={
-                <FontAwesomeIcon icon={Icons.suitcase} className="w-5 h-5" />
-              }
-            />
-            <MiniBarItem
-              title="Personal"
-              icon={
-                <FontAwesomeIcon icon={Icons.commentDots} className="w-5 h-5" />
-              }
-            />
-            <MiniBarItem
-              title="Saved"
-              icon={
-                <FontAwesomeIcon icon={Icons.bookmark} className="w-5 h-5" />
-              }
-            />
-            <MiniBarSeparator />
-            <MiniBarItem
-              title="Calendar"
-              icon={
-                <FontAwesomeIcon icon={Icons.calendar} className="w-5 h-5" />
-              }
-            />
-            <MiniBarItem
-              title="Files"
-              icon={<FontAwesomeIcon icon={Icons.folder} className="w-5 h-5" />}
-            />
+            <AddUser />
           </div>
         </div>
         <div className="flex flex-col gap-8 items-center">
-          <MiniBarItem
-            title="Settings"
-            icon={<FontAwesomeIcon icon={Icons.gear} className="w-5 h-5" />}
-          />
+          <Preferences />
           <LogoutButton />
         </div>
       </div>
