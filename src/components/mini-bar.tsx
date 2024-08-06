@@ -1,5 +1,4 @@
 "use client";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FC, forwardRef, HTMLAttributes, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/utils";

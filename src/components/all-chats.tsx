@@ -8,6 +8,8 @@ import axios from "axios";
 import { useBoundStore } from "@/lib/store";
 import { chatHrefConstructor, cn } from "@/lib/utils";
 import SidebarGroupItem from "./sidebar-group-item";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Icons } from "@/lib/icons";
 
 type AllChatProps = HTMLAttributes<HTMLDivElement> & {};
 const AllChats: FC<AllChatProps> = forwardRef(
@@ -32,6 +34,15 @@ const AllChats: FC<AllChatProps> = forwardRef(
         className={cn("flex flex-col items-center", className)}
         {...rest}
       >
+        <div className="flex items-start w-full">
+          <h4 className="text-md font-black text-foreground capitalize px-4 py-2">
+            <FontAwesomeIcon
+              icon={Icons.message}
+              className="text-foreground mr-2"
+            />
+            All chat
+          </h4>
+        </div>
         {friends?.map((friend) => (
           <Link
             key={friend.id}

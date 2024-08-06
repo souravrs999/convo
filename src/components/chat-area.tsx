@@ -2,6 +2,7 @@
 import {
   FC,
   forwardRef,
+  Fragment,
   HTMLAttributes,
   Ref,
   useEffect,
@@ -13,6 +14,7 @@ import { Message } from "@/lib/validations/message";
 import { pusherClient } from "@/lib/pusher";
 import { cn, toPusherKey } from "@/lib/utils";
 import MessageBubble from "./message-bubble";
+import { formatDistance, isSameDay } from "date-fns";
 
 type ChatAreaProps = HTMLAttributes<HTMLDivElement> & {
   initialMessages: Message[];
@@ -54,15 +56,26 @@ const ChatArea: FC<ChatAreaProps> = forwardRef(
         )}
         {...rest}
       >
-        {messages.map((message, index) => (
-          <MessageBubble
-            key={`${message.id}-${message.timestamp}`}
-            message={message}
-            currentUser={currentUser}
-            chatPartner={chatPartner}
-            prevMessage={messages[index - 1]}
-          />
-        ))}
+        {messages.map((message, index) => {
+          return (
+            <Fragment key={`${message.id}-${message.timestamp}`}>
+              {!isSameDay(
+                message.timestamp,
+                messages[index + 1]?.timestamp
+              ) && (
+                <span className="w-full m-auto max-w-fit text-[10px] my-2 bg-muted-foreground px-3 py-1 rounded-full">
+                  {formatDistance(message.timestamp, Date.now())} ago
+                </span>
+              )}
+              <MessageBubble
+                message={message}
+                currentUser={currentUser}
+                chatPartner={chatPartner}
+                prevMessage={messages[index - 1]}
+              />
+            </Fragment>
+          );
+        })}
       </div>
     );
   }

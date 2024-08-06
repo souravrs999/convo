@@ -33,36 +33,39 @@ const MessageBubble: FC<MessageBubbleProps> = forwardRef(
         className={cn("flex items-end", { "justify-end": isCurrentUser })}
         {...rest}
       >
-        <div className="flex gap-1 items-end">
+        <div
+          className={cn("flex items-end gap-1 text-sm", {
+            "my-1": !isCurrentUser,
+          })}
+        >
           <Image
             src={isCurrentUser ? currentUser.image! : chatPartner.image!}
             alt="avatar"
             width={40}
             height={40}
-            className={cn("rounded-full", {
+            className={cn("rounded-full mb-5", {
               "order-2": isCurrentUser,
-              invisible: hasPrevMessageFromSameUser,
+              "invisible mb-0": hasPrevMessageFromSameUser,
             })}
           />
-          <div
-            className={cn(
-              "relative flex flex-col p-2 text-sm w-fit font-medium max-w-sm",
-              {
+          <div className="flex flex-col gap-1 max-w-sm">
+            <div
+              className={cn("p-2", {
                 "bg-accent text-accent-foreground rounded-[10px_10px_3px_10px]":
                   isCurrentUser,
-                "bg-muted-foreground text-primary rounded-[10px_10px_10px_3px] my-1":
+                "bg-muted-foreground text-primary rounded-[10px_10px_10px_3px]":
                   !isCurrentUser,
-              }
-            )}
-          >
-            <p>{message.content}</p>
-            <div className="flex gap-1 justify-end text-[10px] opacity-80">
+              })}
+            >
+              <p>{message.content}</p>
+            </div>
+            <div
+              className={cn("flex gap-1 justify-end text-[10px] opacity-80", {
+                hidden: hasPrevMessageFromSameUser,
+              })}
+            >
               <time>{formatTimestamp(message.timestamp)}</time>
-              <span
-                className={cn("relative -space-x-1", {
-                  "text-accent": !isCurrentUser,
-                })}
-              >
+              <span className={cn("relative -space-x-1")}>
                 <FontAwesomeIcon icon={Icons.check} />
                 <FontAwesomeIcon icon={Icons.check} />
               </span>
