@@ -40,8 +40,5 @@ export default withAuth(
 );
 
 export const config = {
-  matchter: [
-    // match all routes except static files and APIs
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
-  ],
+  matchter: ["/", "/login", "/chat/:path"],
 };

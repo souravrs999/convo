@@ -3,6 +3,7 @@ import { Input } from "./ui/input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icons } from "@/lib/icons";
 import AllChats from "./all-chats";
+import FriendRequests from "./friend-requests";
 
 type SidebarProps = HTMLAttributes<HTMLDivElement> & {};
 const Sidebar: FC<SidebarProps> = () => {
@@ -20,6 +21,7 @@ const Sidebar: FC<SidebarProps> = () => {
           />
         </div>
       </div>
+      <FriendRequests />
       <AllChats />
     </div>
   );

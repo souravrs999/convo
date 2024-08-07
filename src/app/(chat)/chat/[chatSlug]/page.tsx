@@ -10,7 +10,6 @@ import { getChatMessages } from "@/helpers/get-chat-messages";
 import ChatArea from "@/components/chat-area";
 import ChatInput from "@/components/chat-input";
 import DetailsBar from "@/components/details-bar";
-import MessageQueueHandler from "@/components/message-queue-handler";
 
 type ChatRoomProps = {
   params: { chatSlug: string };
@@ -48,7 +47,6 @@ const ChatRoom: FC<ChatRoomProps> = async ({ params }) => {
         <ChatInput chatPartner={chatPartner} chatId={chatSlug} />
       </div>
       <DetailsBar chatPartner={chatPartner} />
-      <MessageQueueHandler />
     </div>
   );
 };

@@ -1,41 +1,57 @@
-import { fetchRedis } from "@/helpers/redis";
-import { authOptions } from "@/lib/auth";
+"use client";
 import { cn } from "@/lib/utils";
-import { getServerSession, User } from "next-auth";
+import { User } from "next-auth";
 import Image from "next/image";
-import { notFound } from "next/navigation";
 import { FC, forwardRef, HTMLAttributes, Ref } from "react";
-import FriendRequestItem from "./friend-request-item";
 import SidebarGroup from "./sidebar-group";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icons } from "@/lib/icons";
-
-const MAX_VISIBLE_REQUESTS = 4;
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useBoundStore } from "@/lib/store";
+import axios from "axios";
+import { Button } from "./ui/button";
 
 type FriendRequestProps = HTMLAttributes<HTMLDivElement> & {};
 const FriendRequests: FC<FriendRequestProps> = forwardRef(
-  async (props: FriendRequestProps, ref: Ref<HTMLDivElement>) => {
+  (props: FriendRequestProps, ref: Ref<HTMLDivElement>) => {
     const { children, className, ...rest } = props;
+    const user = useBoundStore((state) => state.user);
 
-    const session = await getServerSession(authOptions);
-    if (!session) notFound();
+    const queryClient = useQueryClient();
+    const { data: friendRequests } = useQuery<User[]>({
+      queryKey: ["INCOMING_FRIEND_REQUESTS"],
+      queryFn: async () => {
+        const res = await axios.get("/api/friends/requests");
+        return res.data;
+      },
+      enabled: !!user,
+    });
 
-    const incomingSenderIds = (await fetchRedis(
-      "smembers",
-      `user:${session.user.id}:incoming_friend_requests`
-    )) as string[];
+    const addFriendMutation = useMutation({
+      mutationFn: async (id: string) =>
+        await axios.post("/api/friends/accept", { id }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["FRIENDS_LIST"] }),
+          queryClient.invalidateQueries({
+            queryKey: ["INCOMING_FRIEND_REQUESTS"],
+          });
+      },
+    });
 
-    if (incomingSenderIds.length < 1) {
+    const removeFriendMutation = useMutation({
+      mutationFn: async (id: string) =>
+        await axios.post("/api/friends/deny", { id }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["FRIENDS_LIST"] }),
+          queryClient.invalidateQueries({
+            queryKey: ["INCOMING_FRIEND_REQUESTS"],
+          });
+      },
+    });
+
+    if (friendRequests && friendRequests?.length < 1) {
       return null;
     }
-
-    const incomingFriendRequests = await Promise.all(
-      incomingSenderIds.map(async (senderId) => {
-        const sender = (await fetchRedis("get", `user:${senderId}`)) as string;
-        const senderParsed = JSON.parse(sender) as User;
-        return senderParsed;
-      })
-    );
 
     return (
       <SidebarGroup
@@ -46,30 +62,45 @@ const FriendRequests: FC<FriendRequestProps> = forwardRef(
       >
         <div
           ref={ref}
-          className={cn("flex gap-2 items-center", className)}
+          className={cn("flex flex-col gap-2 items-center", className)}
           {...rest}
         >
-          {incomingFriendRequests
-            ?.slice(0, MAX_VISIBLE_REQUESTS)
-            ?.map((request, idx) => (
-              <FriendRequestItem key={request.id} sender={request} />
-            ))}
-          {incomingFriendRequests.length > MAX_VISIBLE_REQUESTS && (
-            <div className={cn("p-[5px] w-[50px] h-full rounded-xl bg-accent")}>
+          {friendRequests?.map((friend) => (
+            <div
+              key={friend.id}
+              className="flex items-center gap-2 w-full p-3 cursor-pointer border-b"
+            >
               <Image
-                src={incomingFriendRequests[MAX_VISIBLE_REQUESTS].image!}
-                alt={`${
-                  incomingFriendRequests?.length - MAX_VISIBLE_REQUESTS
-                } more`}
-                width={40}
-                height={40}
-                className="rounded-xl"
+                src={friend.image!}
+                alt="avatar"
+                width={50}
+                height={50}
+                className="rounded-full"
               />
-              <p className="truncate text-xs font-semibold text-accent-foreground my-1 text-center">
-                +{incomingFriendRequests?.length - MAX_VISIBLE_REQUESTS}
-              </p>
+              <div className="flex flex-1 flex-col overflow-hidden ml-1 gap-2">
+                <h4 className="text-primary text-sm font-bold capitalize">
+                  {friend.name}
+                </h4>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => removeFriendMutation.mutate(friend.id)}
+                    className="w-full hover:bg-muted-foreground hover:text-foreground border-muted-foreground"
+                  >
+                    Deny
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => addFriendMutation.mutate(friend.id)}
+                    className="w-full"
+                  >
+                    Accept
+                  </Button>
+                </div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
       </SidebarGroup>
     );

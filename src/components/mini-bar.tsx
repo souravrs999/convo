@@ -3,10 +3,8 @@ import { FC, forwardRef, HTMLAttributes, ReactNode, Ref } from "react";
 
 import { cn } from "@/lib/utils";
 import { useBoundStore } from "@/lib/store";
-import { Icons } from "@/lib/icons";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import LogoutButton from "./logout-button";
 import AddUser from "./add-friend";
 import Preferences from "./preferences";
 
@@ -78,7 +76,6 @@ const MiniBar: FC<MiniBarProps> = forwardRef(
         </div>
         <div className="flex flex-col gap-8 items-center">
           <Preferences />
-          <LogoutButton />
         </div>
       </div>
     );

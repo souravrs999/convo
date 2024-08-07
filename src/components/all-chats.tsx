@@ -10,6 +10,7 @@ import { chatHrefConstructor, cn } from "@/lib/utils";
 import SidebarGroupItem from "./sidebar-group-item";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Icons } from "@/lib/icons";
+import SidebarGroup from "./sidebar-group";
 
 type AllChatProps = HTMLAttributes<HTMLDivElement> & {};
 const AllChats: FC<AllChatProps> = forwardRef(
@@ -34,24 +35,34 @@ const AllChats: FC<AllChatProps> = forwardRef(
         className={cn("flex flex-col items-center", className)}
         {...rest}
       >
-        <div className="flex items-start w-full">
-          <h4 className="text-md font-black text-foreground capitalize px-4 py-2">
-            <FontAwesomeIcon
-              icon={Icons.message}
-              className="text-foreground mr-2"
-            />
-            All chat
-          </h4>
-        </div>
-        {friends?.map((friend) => (
-          <Link
-            key={friend.id}
-            className="w-full"
-            href={`/chat/${chatHrefConstructor(user?.id!, friend.id)}`}
-          >
-            <SidebarGroupItem user={friend} />
-          </Link>
-        ))}
+        <SidebarGroup
+          title="All chat"
+          icon={
+            <FontAwesomeIcon icon={Icons.message} className="mr-2 w-4 h-4" />
+          }
+        >
+          {friends && friends?.length < 1 && (
+            <div className="flex items-center gap-4 p-4 bg-muted-foreground">
+              <span className="w-10 h-10 rounded-full bg-accent shrink-0 grid place-items-center text-muted-foreground">
+                <FontAwesomeIcon icon={Icons.info} />
+              </span>
+              <p className="text-xs">
+                Looks like there&apos;s no one here
+                <br />
+                Add some friends to chat with them.
+              </p>
+            </div>
+          )}
+          {friends?.map((friend) => (
+            <Link
+              key={friend.id}
+              className="w-full"
+              href={`/chat/${chatHrefConstructor(user?.id!, friend.id)}`}
+            >
+              <SidebarGroupItem user={friend} />
+            </Link>
+          ))}
+        </SidebarGroup>
       </div>
     );
   }
